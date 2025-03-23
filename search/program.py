@@ -5,6 +5,16 @@ import heapq
 from .core import CellState, Coord, Direction, MoveAction
 from .utils import render_board
 
+class Node:
+    def __init__(self, coord, parent):
+        self.coord = coord
+        self.parent = parent
+        self.g = 0
+        self.h = 0
+        self.f = 0
+        self.moves = []
+    def __eq__(self, other):
+        return self.coord == other.coord
 #import heapq
 
 def search(
@@ -52,13 +62,13 @@ def search(
     return None
 
 #a* search
-def pathfinding(board: dict[Coord, CellState], start:[Coord] , ends :[[Coord]]) \
+def pathfinding(board: dict[Coord, CellState], start:[Node] , ends :[[Coord]]) \
         -> list[MoveAction] | None:
     action_list = [] # list of actions and sorted by f value
     closed_list = set()
-    start_node = Node(start)
+    start_node = Node(start, None)
     #also filter out the ends that are not valid landing spots
-    end_nodes = [Node(end) for end in ends if valid_landing_spot(board, end)]
+    end_nodes = [Node(end,None) for end in ends if valid_landing_spot(board, end)]
 
     #the current node
     action_list.append(start_node)
@@ -73,8 +83,7 @@ def pathfinding(board: dict[Coord, CellState], start:[Coord] , ends :[[Coord]]) 
         #check if current is the end
         if current.coord in ends:
             #repack the path to return
-            return [MoveAction(coord=o.coord, _directions= o.moves)
-                    for o in action_list]
+            return retrace_path(start, current.coord)
 
         #add adjacent coordinates to open list
         pending_directions = [MoveAction]
@@ -86,10 +95,10 @@ def pathfinding(board: dict[Coord, CellState], start:[Coord] , ends :[[Coord]]) 
             if next_coord not in closed_list:
                 #add the next node to the open list
                 if can_jump(board, next_coord, direction):
-                    new_node = Node(next_coord + direction)
+                    new_node = Node(next_coord + direction, current)
                 #if it cannot jump
                 elif valid_landing_spot(board, next_coord):
-                    new_node = Node(next_coord)
+                    new_node = Node(next_coord, current)
                 else:
                     continue
                 new_node.g = current.g + 1
@@ -120,13 +129,12 @@ def valid_landing_spot(board, coord):
     #check valid pad
     if board[coord] == CellState.LILY_PAD and board[coord] != CellState.RED and board[coord] != CellState.BLUE:
         return True
-
-class Node:
-    def __init__(self, coord):
-        self.coord = coord
-        self.g = 0
-        self.h = 0
-        self.f = 0
-        self.moves = []
-    def __eq__(self, other):
-        return self.coord == other.coord
+def retrace_path(start : Node, end : Node) \
+        -> list[MoveAction]:
+    path = []
+    current = end
+    while current != start:
+        path.append(current)
+        current = current.parent
+    path.reverse()
+    return path
