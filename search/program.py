@@ -4,22 +4,6 @@
 from .core import CellState, Coord, Direction, MoveAction
 from .utils import render_board
 
-# Helper function to check if a cell is within the board boundaries
-def is_valid(coord: Coord) -> bool:
-    return 0 <= coord.r < 8 and 0 <= coord.c < 8
-
-# Helper function to check if a cell is a lily pad
-def is_lily_pad(board: dict[Coord, CellState], coord: Coord) -> bool:
-    return board.get(coord) == CellState.LILY_PAD
-
-# Helper function to check if a cell is empty
-def is_empty(board: dict[Coord, CellState], coord: Coord) -> bool:
-    return board.get(coord) is None
-
-# Helper function to check if a cell has a blue frog
-def is_blue_frog(board: dict[Coord, CellState], coord: Coord) -> bool:
-    return board.get(coord) == CellState.BLUE
-
 def search(
     board: dict[Coord, CellState]
 ) -> list[MoveAction] | None:
@@ -44,20 +28,18 @@ def search(
     # codes, set the `ansi` flag to True to print a colour-coded version!
     print(render_board(board, ansi=True))
 
-    # Do some impressive AI stuff here to find the solution...
-    # (your solution goes here!)
+    #################################Solution########################################
     
 
     # Here we're returning "hardcoded" actions as an example of the expected
     # output format. Of course, you should instead return the result of your
     # search algorithm. Remember: if no solution is possible for a given input,
     # return `None` instead of a list.
-    """ return [
+    return [
         MoveAction(Coord(0, 5), [Direction.Down]),
         MoveAction(Coord(1, 5), [Direction.DownLeft]),
         MoveAction(Coord(3, 3), [Direction.Left]),
         MoveAction(Coord(3, 2), [Direction.Down, Direction.Right]),
         MoveAction(Coord(5, 4), [Direction.Down]),
         MoveAction(Coord(6, 4), [Direction.Down]),
-    ] """
-    return None
+    ]
