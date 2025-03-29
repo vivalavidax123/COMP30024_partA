@@ -3,7 +3,8 @@
 
 from sys import stdin
 from .core import Coord, CellState, MoveAction
-from .program import search
+from .program import bfs
+from .program1 import a_star_search
 
 # WARNING: Please *do not* modify any of the code in this file, as this could
 #          break things in the submission environment. Failed test cases due to
@@ -56,7 +57,7 @@ def main():
     Main entry point for program.
     """
     input = parse_input(stdin.read())
-    sequence: list[MoveAction] | None = search(input)
+    sequence: list[MoveAction] | None = a_star_search(input)
     print_result(sequence)
 
 
