@@ -7,10 +7,10 @@ from .utils import render_board
 from collections import deque
 
 
-def search(board: dict[Coord, CellState]) -> list[MoveAction] | None:
+def bfs(board: dict[Coord, CellState]) -> list[MoveAction] | None:
     """
     This is the entry point for your submission. You should modify this
-    function to solve the search problem discussed in the Part A specification.
+    function to solve the bfs problem discussed in the Part A specification.
     See `core.py` for information on the types being used here.
 
     Parameters:
